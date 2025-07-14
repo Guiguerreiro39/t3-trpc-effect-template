@@ -3,6 +3,7 @@ import { Effect, Schema } from "effect";
 import { PostService } from "@/lib/services/post";
 import { RuntimeServer } from "@/lib/runtime-server";
 import { Result } from "@/lib/result";
+import { withRetry } from "@/server/helpers/with-retry";
 
 export const postRouter = Effect.gen(function* () {
   const postService = yield* PostService;
@@ -25,6 +26,7 @@ export const postRouter = Effect.gen(function* () {
 
     getLatest: publicProcedure.query(() => {
       return postService.getLatestPost.pipe(
+        withRetry,
         Effect.match({
           onSuccess: Result.ok,
           onFailure: Result.error,
