@@ -1,29 +1,20 @@
-# Create T3 App
+# T3 Stack with tRPC and Effect integration
 
-This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
+This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app` that contains the necessary building blocks for a tRPC and Effect Fullstack application.
 
-## What's next? How do I make an app with this?
+## What's changed from the original t3 stack template?
+Some files were created and modified to accomodate **Effect**:
+- New **lib** folder
+  - **runtime-client.ts**: Necessary to run effects on the client side.
+  - **runtime-server.ts**: Necessary to run effects on the server side. This file must be updated whenever a new service is introduced.
+  - **result.ts**: Types and methods for Result which is the main structure sent by the server. This helps the client to compose a new effect on the client with the errors and data of the server. This is necessary since tRPC serializes the data it sends.
+  - **generate-effect.ts**: Methods to transform Result typed data into effects.
+  - **services**: All the services used in the application.
+  - **schemas**: All the effect schemas used in the application.
 
-We try to keep this project as simple as possible, so you can start with just the scaffolding we set up for you, and add additional things later when they become necessary.
+**Zod** was also removed in order to introduce **Effect.Schema** as our main validation library.
 
-If you are not familiar with the different technologies used in this project, please refer to the respective docs. If you still are in the wind, please join our [Discord](https://t3.gg/discord) and ask for help.
+Within the **server** folder, there's a new folder **helpers** for any effect methods meant to assist any router. In this template, we already introduce a helper method called **with-retry.ts** which retries an **Effect.gen** function whenever it fails. This is to simulate the behavior of **TanStack useQuery** since we're no longer relying on the **TRPCErrors** coming from the server.
 
-- [Next.js](https://nextjs.org)
-- [NextAuth.js](https://next-auth.js.org)
-- [Prisma](https://prisma.io)
-- [Drizzle](https://orm.drizzle.team)
-- [Tailwind CSS](https://tailwindcss.com)
-- [tRPC](https://trpc.io)
-
-## Learn More
-
-To learn more about the [T3 Stack](https://create.t3.gg/), take a look at the following resources:
-
-- [Documentation](https://create.t3.gg/)
-- [Learn the T3 Stack](https://create.t3.gg/en/faq#what-learning-resources-are-currently-available) — Check out these awesome tutorials
-
-You can check out the [create-t3-app GitHub repository](https://github.com/t3-oss/create-t3-app) — your feedback and contributions are welcome!
-
-## How do I deploy this?
-
-Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel), [Netlify](https://create.t3.gg/en/deployment/netlify) and [Docker](https://create.t3.gg/en/deployment/docker) for more information.
+## What's next?
+You can clone this repo and start using it freely!
