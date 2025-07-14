@@ -15,8 +15,12 @@ const posts: (typeof Post.Encoded)[] = [
 export class PostService extends Effect.Service<PostService>()("PostService", {
   effect: Effect.gen(function* () {
     return {
-      getPosts: Effect.succeed(posts),
-      getLatestPost: Effect.succeed(posts.at(-1)),
+      getPosts: Effect.gen(function* () {
+        return posts;
+      }),
+      getLatestPost: Effect.gen(function* () {
+        return posts.at(-1);
+      }),
       createPost: Effect.gen(function* () {
         return ({ name }: { name: string }) => {
           const post = { id: posts.length + 1, name };
