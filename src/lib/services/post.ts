@@ -12,7 +12,7 @@ const posts: (typeof Post.Encoded)[] = [
   },
 ];
 
-export class PostApi extends Effect.Service<PostApi>()("PostApi", {
+export class PostService extends Effect.Service<PostService>()("PostService", {
   effect: Effect.gen(function* () {
     return {
       getPosts: Effect.succeed(posts),
