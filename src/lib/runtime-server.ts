@@ -1,4 +1,4 @@
-import { PostService } from "@/lib/services/post";
+import { PostService } from "@/features/post/service";
 import { Layer, ManagedRuntime } from "effect";
 
 const MainLayer = Layer.mergeAll(PostService.Default);

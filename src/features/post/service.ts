@@ -1,5 +1,5 @@
 import { Effect } from "effect";
-import { Post } from "@/lib/schemas/post";
+import { Post, PostNotFound } from "./schema";
 
 const posts: (typeof Post.Encoded)[] = [
   {
@@ -19,7 +19,13 @@ export class PostService extends Effect.Service<PostService>()("PostService", {
         return posts;
       }),
       getLatestPost: Effect.gen(function* () {
-        return posts.at(-1);
+        const post = posts.at(-1);
+
+        if (!post) {
+          return yield* Effect.fail(new PostNotFound());
+        }
+
+        return post;
       }),
       createPost: Effect.gen(function* () {
         return ({ name }: { name: string }) => {

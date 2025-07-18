@@ -1,9 +1,9 @@
 import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
 import { Effect, Schema } from "effect";
-import { PostService } from "@/lib/services/post";
+import { PostService } from "@/features/post/service";
 import { RuntimeServer } from "@/lib/runtime-server";
-import { Result } from "@/lib/result";
-import { withRetry } from "@/server/helpers/with-retry";
+import { TRPCError } from "@trpc/server";
+import { notReachable } from "@/lib/utils";
 
 export const postRouter = Effect.gen(function* () {
   const postService = yield* PostService;
@@ -15,21 +15,26 @@ export const postRouter = Effect.gen(function* () {
         return Effect.gen(function* () {
           const createPost = yield* postService.createPost;
           return createPost(input);
-        }).pipe(
-          Effect.match({
-            onSuccess: Result.ok,
-            onFailure: Result.error,
-          }),
-          RuntimeServer.runPromise
-        );
+        }).pipe(RuntimeServer.runPromise);
       }),
 
     getLatest: publicProcedure.query(() => {
-      return postService.getLatestPost.pipe(
-        withRetry,
+      return Effect.gen(function* () {
+        return yield* postService.getLatestPost;
+      }).pipe(
         Effect.match({
-          onSuccess: Result.ok,
-          onFailure: Result.error,
+          onFailure: (error) => {
+            switch (error._tag) {
+              case "PostNotFound":
+                throw new TRPCError({
+                  code: "NOT_FOUND",
+                  message: "Post not found",
+                });
+              default:
+                return notReachable(error._tag);
+            }
+          },
+          onSuccess: (value) => value,
         }),
         RuntimeServer.runPromise
       );

@@ -3,13 +3,9 @@
 import { useState } from "react";
 
 import { api } from "@/trpc/react";
-import { effectFromSuspenseQuery } from "@/lib/generate-effect";
-import { ClientMatch } from "@/lib/runtime-client";
 
 export function LatestPost() {
-  const [latestPost] = effectFromSuspenseQuery(
-    api.post.getLatest.useSuspenseQuery()
-  );
+  const [latestPost] = api.post.getLatest.useSuspenseQuery();
 
   const utils = api.useUtils();
   const [name, setName] = useState("");
@@ -23,19 +19,9 @@ export function LatestPost() {
 
   return (
     <div className="w-full max-w-xs">
-      {latestPost &&
-        ClientMatch(latestPost, {
-          onSuccess: (post) => {
-            if (!post) {
-              return <p>You have no posts yet.</p>;
-            }
-
-            return (
-              <p className="truncate">Your most recent post: {post.name}</p>
-            );
-          },
-          onFailure: () => <p>Could not retrieve your latest post.</p>,
-        })}
+      {latestPost && (
+        <p className="truncate">Your most recent post: {latestPost.name}</p>
+      )}
       <form
         onSubmit={(e) => {
           e.preventDefault();
