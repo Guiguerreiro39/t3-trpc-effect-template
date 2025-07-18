@@ -26,16 +26,18 @@
     "superjson": "^2.2.1"
   },
   "devDependencies": {
-    "@biomejs/biome": "1.9.4",
-    "effect": "^3.16.13",
+    "@biomejs/biome": "2.1.2",
     "@effect/language-service": "^0.27.2",
     "@tailwindcss/postcss": "^4.0.15",
     "@types/node": "^20.14.10",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
+    "effect": "^3.16.13",
+    "husky": "^9.1.7",
     "postcss": "^8.5.3",
     "tailwindcss": "^4.0.15",
-    "typescript": "^5.8.2"
+    "typescript": "^5.8.2",
+    "ultracite": "5.0.43"
   },
   "ct3aMetadata": {
     "initVersion": "7.39.3"

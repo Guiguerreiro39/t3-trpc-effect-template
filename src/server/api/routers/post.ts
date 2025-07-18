@@ -4,13 +4,14 @@ import { PostService } from "@/features/post/service";
 import { RuntimeServer } from "@/lib/runtime-server";
 import { TRPCError } from "@trpc/server";
 import { notReachable } from "@/lib/utils";
+import { PostInputs } from "@/features/post/schema";
 
 export const postRouter = Effect.gen(function* () {
   const postService = yield* PostService;
 
   return {
     create: publicProcedure
-      .input(Schema.standardSchemaV1(Schema.Struct({ name: Schema.String })))
+      .input(Schema.standardSchemaV1(PostInputs.create))
       .mutation(async ({ input }) => {
         return Effect.gen(function* () {
           const createPost = yield* postService.createPost;
